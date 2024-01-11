@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue - Week2</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Salsa&display=swap" rel="stylesheet">
+
+  <style>
+    img {
+      object-fit: contain;
+      max-width: 100%;
+    }
+
+    .primary-image {
+      height: 300px;
+    }
+
+    .images {
+      height: 150px;
+    }
+
+    .font-salsa {
+      font-family: 'Salsa', cursive;
+    }
+
+    @media (max-width: 767.98px) {
+      .loginBoxImg {
+        max-height: 350px;
+        height: 350px;
+        position: relative;
+      }
+
+      .loginBoxImg img {
+        position: absolute;
+        bottom: -24px;
+        left: 0;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  </style>
+</head>
+
+<body style="background: #dddddd;">
+  <div id="app">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg bg-warning">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <template v-for="(page, index) in pages" :key="index">
+                <li class="nav-item" v-if="page.is_active">
+                  <a class="nav-link" :aria-label="page.title" :href="page.link">{{ page.week }}</a>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <h2 class="text-center py-3 mb-0 fw-bold">Week 2</h2>
+      <div class="loginBox mx-auto my-5 bg-light rounded-3 overflow-hidden p-2"
+        style="max-width: 700px; box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);">
+        <div class="row g-0">
+          <div class="col-md-6">
+            <div class="rounded-3 overflow-hidden loginBoxImg">
+              <img
+                src="https://plus.unsplash.com/premium_photo-1663852705829-aa8707495e2e?q=80&w=1286&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="">
+            </div>
+          </div>
+          <div class="col-md-6 p-4 p-0">
+            <div class="d-flex justify-content-center align-items-center h-100">
+              <div>
+                <div class="text-center mb-4">
+                  <h3 class="fw-bold mb-2 font-salsa">Hello!</h3>
+                  <h5 class="fw-bold mb-0 font-salsa">Welcome Back Your Account</h4>
+                </div>
+                <form id="form" class="form-signin text-center  ">
+                  <div class="form-floating mb-2">
+                    <input type="email" class="form-control" id="username" placeholder="name@example.com" required
+                      autofocus v-model="user.username">
+                    <label for="username">Email address</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="password" class="form-control" id="password" placeholder="Password" required v-model="user.password">
+                    <label for="password">Password</label>
+                  </div>
+                  <button class="btn btn-sm btn-primary w-50 mt-3" type="button" @click="login">登入</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script type="module">
+    // ES module Loading
+    import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+    import { pages } from "./js/nav.js";
+    import axios from "https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/esm/axios.min.js";
+
+    // const productAPI = `${url}/api/${path}/products/all`
+    // console.log(productAPI);
+
+    createApp({
+      data() {
+        return {
+          pages,
+          apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+          apiPath: 'delifans',
+          loginStatus: false,
+          user: {
+            username: '',
+            pawwdoed: ''
+          },
+        }
+      },
+      methods: {  
+        login() {
+
+          const loginAPI = `${this.apiUrl}/admin/signin`;
+
+          axios.post(loginAPI, this.user)
+            .then(res => {
+              console.log(res);
+              const { token, expired } = res.data;
+              console.log(token, expired);
+
+              // MDN set cookie template
+              document.cookie = `hexVueToken=${token}; expires=${new Date(expired)}`;
+              window.location = './week2-products.html'
+              
+              // this.user.username = ''
+              // this.user.password = ''
+            })
+            .catch(err => {
+              console.log(err);
+              // this.user.username = ''
+              // this.user.password = ''
+            })
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+
+</html>

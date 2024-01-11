@@ -6,10 +6,10 @@ export const pages = [
     is_active: true
   },
   {
-    title: '第二週 - ',
+    title: '第二週 - RESTful API 串接',
     week: '第二週',
-    link: './week2.html',
-    is_active: false
+    link: './week2-login.html',
+    is_active: true
   },
   {
     title: '第三週 - ',

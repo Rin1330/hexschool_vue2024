@@ -70,7 +70,16 @@
       </nav>
 
       <h2 class="text-center py-3 mb-0 fw-bold">Week 2 </h2>
-      <p>登入成功</p>
+      <div>
+        <template v-if="loginStatus">
+          <p class="text-center font-salsa h5">{{ welcomeMsg }}</p>
+        </template>
+        <template v-else>
+          <p class="text-center text-danger font-salsa h5">{{ timeOutMsg }}</p>
+        </template>
+      </div>
+
+      {{ products }}
     </div>
   </div>
 
@@ -92,36 +101,53 @@
           pages,
           apiUrl: 'https://vue3-course-api.hexschool.io/v2',
           apiPath: 'delifans',
-          loginStatus: false,
+          loginStatus: true,
           user: {
             username: '',
             pawwdoed: ''
           },
+          welcomeMsg: 'Welcome To Admin Products Page',
+          timeOutMsg: 'Token Expired! Redirect To Login Page!',
+          products: [],
+          tempProduct: {}
         }
       },
-      methods: {  
-        login() {
-
-          const loginAPI = `${this.apiUrl}/admin/signin`;
-
-          axios.post(loginAPI, this.user)
+      methods: {
+        checkAdmin() {
+          axios.post(`${this.apiUrl}/api/user/check`)
             .then(res => {
-              console.log(res);
-              const { token, expired } = res.data;
-              console.log(token, expired);
-
-              // MDN set cookie template
-              document.cookie = `hexVueToken=${token}; expires=${new Date(expired)}`;
-              
-              // this.user.username = ''
-              // this.user.password = ''
+              console.log(res.data);
+              this.loginStatus = true
+              this.getProducts()
             })
             .catch(err => {
+              console.log(err.response.data.message);
+              this.loginStatus = false
+              setTimeout(() => {
+                window.location = './week2-login.html'
+              }, 1500);
+            })
+        },
+        getProducts() {
+          axios.get(`${this.apiUrl}/api/${this.apiPath}/admin/products/all`)
+            .then(res => {
+              console.log(res.data.products);
+              // this.products = [...res.data.products]
+            })
+            .catch(err=> {
               console.log(err);
-              // this.user.username = ''
-              // this.user.password = ''
             })
         }
+      },
+      mounted() {
+        const token = document.cookie.replace(
+          /(?:(?:^|.*;\s*)hexVueToken\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1",
+        );
+        // console.log(token);
+        axios.defaults.headers.common['Authorization'] = token;
+
+        this.checkAdmin()
       }
     }).mount('#app')
   </script>

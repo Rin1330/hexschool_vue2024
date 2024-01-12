@@ -93,11 +93,16 @@
                       autofocus v-model="user.username">
                     <label for="username">Email address</label>
                   </div>
-                  <div class="form-floating">
+                  <div class="form-floating mb-3">
                     <input type="password" class="form-control" id="password" placeholder="Password" required v-model="user.password">
                     <label for="password">Password</label>
                   </div>
-                  <button class="btn btn-sm btn-primary w-50 mt-3" type="button" @click="login">登入</button>
+                  <template v-if="loginErrMsg">
+                    <p><small class="text-danger font-salsa">Email or Password Invalid</small></p>
+                  </template> 
+                  <div>
+                    <button class="btn btn-sm btn-primary w-50" type="button" @click="login">登入</button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -126,6 +131,7 @@
           apiUrl: 'https://vue3-course-api.hexschool.io/v2',
           apiPath: 'delifans',
           loginStatus: false,
+          loginErrMsg: false,
           user: {
             username: '',
             pawwdoed: ''
@@ -134,7 +140,6 @@
       },
       methods: {  
         login() {
-
           const loginAPI = `${this.apiUrl}/admin/signin`;
 
           axios.post(loginAPI, this.user)
@@ -145,16 +150,19 @@
 
               // MDN set cookie template
               document.cookie = `hexVueToken=${token}; expires=${new Date(expired)}`;
+              this.clearInput()
               window.location = './week2-products.html'
-              
-              // this.user.username = ''
-              // this.user.password = ''
+              this.loginErrMsg = false
             })
             .catch(err => {
               console.log(err);
-              // this.user.username = ''
-              // this.user.password = ''
+              this.loginErrMsg = true
+              this.clearInput()
             })
+        },
+        clearInput() {
+          this.user.username = ''
+          this.user.password = ''
         }
       }
     }).mount('#app')

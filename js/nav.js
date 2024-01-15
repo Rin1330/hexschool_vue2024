@@ -2,13 +2,13 @@ export const pages = [
   {
     title: '第一週 - 從函式拆解認識設計模式',
     week: '第一週',
-    link: '/week1/index.html',
+    link: './../week1/index.html',
     is_active: true
   },
   {
     title: '第二週 - RESTful API 串接',
     week: '第二週',
-    link: '/week2/login.html',
+    link: './../week2/login.html',
     is_active: true
   },
   {

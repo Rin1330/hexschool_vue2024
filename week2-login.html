@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Salsa&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
 
 <body style="background: #dddddd;">
@@ -28,7 +28,7 @@
         </button>
         <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
           <ul class="navbar-nav mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="../index.html">目錄</a></li>
+            <li class="nav-item"><a class="nav-link" href="./index.html">目錄</a></li>
             <template  v-for="(page, index) in pages" :key="index">
               <li class="nav-item" v-if="page.is_active">
                 <a class="nav-link" :aria-label="page.title" :href="page.link">{{ page.week }}</a>
@@ -89,7 +89,7 @@
   <script type="module">
     // ES module Loading
     import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
-    import { pages } from "../js/nav.js";
+    import { pages } from "./js/nav.js";
     import axios from "https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/esm/axios.min.js";
 
     createApp({

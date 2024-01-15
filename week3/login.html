@@ -40,7 +40,7 @@
     </nav>
     <div class="container">
 
-      <h2 class="text-center py-3 mb-0 fw-bold">Week 2</h2>
+      <h2 class="text-center py-3 mb-0 fw-bold">Week 3</h2>
       <div class="loginBox mx-auto my-5 bg-light rounded-3 overflow-hidden p-2"
         style="max-width: 700px; box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);">
         <div class="row g-0">
@@ -83,53 +83,38 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <script type="module">
     // ES module Loading
     import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
     import { pages } from "../js/nav.js";
     import axios from "https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/esm/axios.min.js";
 
+    // global value
+    const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
+    const apiPath = 'delifans';
+
     createApp({
       data() {
         return {
           pages,
-          apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-          apiPath: 'delifans',
           loginErrMsg: false,
           user: {
             username: '',
-            pawwdoed: ''
-          },
+            password: ''
+          }
         }
       },
-      methods: {  
+      methods: {
         login() {
-          const loginAPI = `${this.apiUrl}/admin/signin`;
-
-          axios.post(loginAPI, this.user)
+          axios.post(`${apiUrl}/admin/signin`, apiPath)
             .then(res => {
+              
               console.log(res);
-              const { token, expired } = res.data;
-              console.log(token, expired);
-
-              // MDN set cookie template
-              document.cookie = `hexVueToken=${token}; expires=${new Date(expired)}`;
-              this.clearInput()
-              window.location = './products-admin.html'
-              this.loginErrMsg = false
             })
             .catch(err => {
-              console.log(err);
-              this.loginErrMsg = true
-              this.clearInput()
+              console.log(err)
             })
-        },
-        clearInput() {
-          this.user.username = ''
-          this.user.password = ''
         }
       }
     }).mount('#app')

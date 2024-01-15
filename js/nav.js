@@ -15,6 +15,6 @@ export const pages = [
     title: '第三週 - 熟練 Vue.js',
     week: '第三週',
     link: './week3-login.html',
-    is_active: false
+    is_active: true
   },
 ]

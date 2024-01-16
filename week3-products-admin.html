@@ -1,47 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue2023 - Week3 -Product</title>
-    <!-- Bootstrap Style -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Salsa&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./css/style.css" />
-  </head>
-  <body style="background: #dddddd;">
-    <div id="app">
-      <nav class="navbar navbar-expand-lg bg-warning">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item"><a class="nav-link" href="./index.html">目錄</a></li>
-              <template  v-for="(page, index) in pages" :key="index">
-                <li class="nav-item" v-if="page.is_active">
-                  <a class="nav-link" :aria-label="page.title" :href="page.link">{{ page.week }}</a>
-                </li>
-              </template>
-            </ul>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vue2023 - Week3 -Product</title>
+  <!-- Bootstrap Style -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Salsa&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body style="background: #dddddd;">
+  <div id="app">
+    <nav class="navbar navbar-expand-lg bg-warning">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="./index.html">目錄</a></li>
+            <template v-for="(page, index) in pages" :key="index">
+              <li class="nav-item" v-if="page.is_active">
+                <a class="nav-link" :aria-label="page.title" :href="page.link">{{ page.week }}</a>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h2 class="text-center py-3 mb-0 fw-bold">Week 3</h2>
+      <!-- {{ Object.entries(products) }} -->
+      <div class="d-flex justify-content-between">
+        <h3 class="h6 text-dark fw-bold font-salsa">
+          Admin Status:
+          <span :class="`${isAdmin.success ? 'text-success' : 'text-danger' }`">{{ isAdmin.success ? true : false }}</span>
+        </h3>
+        <template v-if="isAdmin.success">
+          <h3 class="h6 text-dark fw-bold font-salsa">uid: {{ isAdmin.uid}} </h3>
+        </template>
+      </div>
+      <div class="text-end mt-4">
+        <button class="btn btn-primary">建立新的產品</button>
+      </div>
+      <table class="table mt-4 rounded-3 overflow-hidden">
+        <thead>
+          <tr>
+            <th width="120">分類</th>
+            <th>產品名稱</th>
+            <th width="120" class="text-end">原價</th>
+            <th width="120" class="text-end">售價</th>
+            <th width="100" class="text-center">是否啟用</th>
+            <th width="120">編輯</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="product in products" :key="product.id">
+            <td>{{ product.category }}</td>
+            <td>{{ product.title }}</td>
+            <td class="text-end"> {{ product.origin_price}} </td>
+            <td class="text-end"> {{ product.price }} </td>
+            <td class="text-center">
+              <span v-if="product.is_enabled" class="text-success">啟用</span>
+              <span v-else>未啟用</span>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary btn-sm">編輯</button>
+                <button type="button" class="btn btn-outline-danger btn-sm">刪除</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6"><p>目前有 <span>{{ Object.keys(products).length }}</span> 項產品</p></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <!-- Modal -->
+    <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content border-0">
+          <div class="modal-header bg-dark text-white">
+            <h5 id="productModalLabel" class="modal-title">
+              <span>新增產品</span>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="mb-2">
+                  <div class="mb-3">
+                    <label for="imageUrl" class="form-label">輸入圖片網址</label>
+                    <input type="text" class="form-control" placeholder="請輸入圖片連結">
+                  </div>
+                  <img class="img-fluid" src="" alt="">
+                </div>
+                <div v-if="isImage">
+                  <button class="btn btn-outline-primary btn-sm d-block w-100">
+                    新增圖片
+                  </button>
+                </div>
+                <div v-else>
+                  <button class="btn btn-outline-danger btn-sm d-block w-100">
+                    刪除圖片
+                  </button>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="mb-3">
+                  <label for="title" class="form-label">標題</label>
+                  <input id="title" type="text" class="form-control" placeholder="請輸入標題">
+                </div>
+
+                <div class="row">
+                  <div class="mb-3 col-md-6">
+                    <label for="category" class="form-label">分類</label>
+                    <input id="category" type="text" class="form-control" placeholder="請輸入分類">
+                  </div>
+                  <div class="mb-3 col-md-6">
+                    <label for="price" class="form-label">單位</label>
+                    <input id="unit" type="text" class="form-control" placeholder="請輸入單位">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="mb-3 col-md-6">
+                    <label for="origin_price" class="form-label">原價</label>
+                    <input id="origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價">
+                  </div>
+                  <div class="mb-3 col-md-6">
+                    <label for="price" class="form-label">售價</label>
+                    <input id="price" type="number" min="0" class="form-control" placeholder="請輸入售價">
+                  </div>
+                </div>
+                <hr>
+
+                <div class="mb-3">
+                  <label for="description" class="form-label">產品描述</label>
+                  <textarea id="description" type="text" class="form-control" placeholder="請輸入產品描述">
+             </textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="content" class="form-label">說明內容</label>
+                  <textarea id="description" type="text" class="form-control" placeholder="請輸入說明內容">
+             </textarea>
+                </div>
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input id="is_enabled" class="form-check-input" type="checkbox" :true-value="1" :false-value="0">
+                    <label class="form-check-label" for="is_enabled">是否啟用</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              取消
+            </button>
+            <button type="button" class="btn btn-primary">
+              確認
+            </button>
           </div>
         </div>
-      </nav>
-      <div class="container">
-        <h2 class="text-center py-3 mb-0 fw-bold">Week 2 </h2>
-        
       </div>
     </div>
-  </body>
+    <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
+      aria-labelledby="delProductModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content border-0">
+          <div class="modal-header bg-danger text-white">
+            <h5 id="delProductModalLabel" class="modal-title">
+              <span>刪除產品</span>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            是否刪除
+            <strong class="text-danger"></strong> 商品(刪除後將無法恢復)。
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              取消
+            </button>
+            <button type="button" class="btn btn-danger">
+              確認刪除
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script type="module">
+    // ES module Loading
+    import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+    import { pages } from "./js/nav.js";
+    import axios from "https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/esm/axios.min.js";
+
+    const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
+    const apiPath = 'delifans';
+
+
+    createApp({
+      data() {
+        return {
+          pages,
+          isAdmin: {},
+          isImage: true,
+          products: {},
+          
+        }
+      },
+      methods: {
+        checkAdmin() {
+          axios.post(`${apiUrl}/api/user/check`)
+            .then(res => {
+              console.log(res.data);
+              this.isAdmin = {... res.data}
+              this.getProducts()
+            })
+            .catch(err => {
+              console.log(err);
+              window.location.href = './week3-login.html'
+            })
+        },
+        getProducts() {
+          axios.get(`${apiUrl}/api/${apiPath}/admin/products/all`)
+            .then(res => {
+              console.log(res.data.products);
+              this.products = JSON.parse(JSON.stringify(res.data.products))
+            })
+            .catch(err => {
+              console.log(err.response.data.message);
+            })
+        }
+      },
+      created() {
+        const week3Token = document.cookie.replace(
+          /(?:(?:^|.*;\s*)week3Cookie\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1",
+          );
+          axios.defaults.headers.common['Authorization'] = week3Token;
+          this.checkAdmin()
+      }
+    }).mount('#app')
+  </script>
+</body>
+
 </html>

@@ -17,4 +17,10 @@ export const pages = [
     link: './week3-login.html',
     is_active: true
   },
+  {
+    title: '第四週：元件化',
+    week: '第四週',
+    link: './week4-login.html',
+    is_active: true
+  },
 ]

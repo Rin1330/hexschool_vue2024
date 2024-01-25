@@ -41,11 +41,11 @@
       <div class="d-flex justify-content-between">
         <h3 class="h6 text-dark fw-bold font-salsa">
           Admin Status:
-          <span :class="`${isAdmin.success ? 'text-success' : 'text-danger' }`">{{ isAdmin.success ? true : false
+          <span :class="`${adminInfo.success ? 'text-success' : 'text-danger' }`">{{ adminInfo.success ? true : false
             }}</span>
         </h3>
-        <template v-if="isAdmin.success">
-          <h3 class="h6 text-dark fw-bold font-salsa">uid: {{ isAdmin.uid}} </h3>
+        <template v-if="isAdmin">
+          <h3 class="h6 text-dark fw-bold font-salsa">uid: {{ adminInfo.uid}} </h3>
         </template>
       </div>
       <div class="text-end mt-4">
@@ -137,31 +137,6 @@
                   </button>
                 </div>
               </div>
-
-
-
-              <!-- <div class="col-sm-4">
-                <div class="mb-2">
-                  <div class="mb-3">
-                    <label for="imageUrl" class="form-label">輸入圖片網址</label>
-                    <input type="text" class="form-control" placeholder="請輸入圖片連結" v-model="tempProduct.imagesUrl">
-                  </div>
-                  <img class="img-fluid" :src="tempProduct.imagesUrl" alt="">
-                </div>
-                <div v-if="isImage">
-                  <button class="btn btn-outline-primary btn-sm d-block w-100">新增圖片</button>
-                </div>
-                <div v-else>
-                  <button class="btn btn-outline-danger btn-sm d-block w-100">刪除圖片</button>
-                </div>
-              </div> -->
-
-
-
-
-
-
-
               <div class="col-sm-8">
                 <div class="mb-3">
                   <label for="title" class="form-label">標題</label>
@@ -182,11 +157,11 @@
                 <div class="row">
                   <div class="mb-3 col-md-6">
                     <label for="origin_price" class="form-label">原價</label>
-                    <input id="origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model="tempProduct.origin_price">
+                    <input id="origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model.number="tempProduct.origin_price">
                   </div>
                   <div class="mb-3 col-md-6">
                     <label for="price" class="form-label">售價</label>
-                    <input id="price" type="number" min="0" class="form-control" placeholder="請輸入售價" v-model="tempProduct.price">
+                    <input id="price" type="number" min="0" class="form-control" placeholder="請輸入售價" v-model.number="tempProduct.price">
                   </div>
                 </div>
                 <hr>
@@ -261,9 +236,10 @@
           pages,
           apiUrl: 'https://vue3-course-api.hexschool.io/v2',
           apiPath: 'delifans',
-          isAdmin: {},
+          isAdmin: false,
           isImage: true,
           isNew: false,
+          adminInfo : {},
           products: {},
           tempProduct: {}
         }
@@ -273,7 +249,8 @@
           axios.post(`${this.apiUrl}/api/user/check`)
             .then(res => {
               // console.log(res.data);
-              this.isAdmin = { ...res.data }
+              this.isAdmin = true
+              this.adminInfo = { ...res.data }
               this.getProducts()
             })
             .catch(err => {

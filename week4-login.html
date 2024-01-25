@@ -103,7 +103,19 @@
       },
       methods: {
         loginToWeek4() {
-          console.log('fn');
+          axios.post(`${this.apiUrl}/admin/signin`, this.user)
+          .then(res => {
+            const { token, expired } = res.data
+            document.cookie = `week4Cookie=${token}; expires=${new Date(expired)}`;
+            this.user.username = '';
+            this.user.password = '';
+            window.location.href = './week4-products-admin.html'
+          })
+          .catch(err => {
+            this.loginErrMsg = true;
+            this.user.username = '';
+            this.user.password = '';
+          })
         }
       }
     })

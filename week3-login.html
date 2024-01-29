@@ -21,23 +21,7 @@
 
 <body style="background: #dddddd;">
   <div id="app">
-    <nav class="navbar navbar-expand-lg bg-warning">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-          <ul class="navbar-nav mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="./index.html">目錄</a></li>
-            <template  v-for="(page, index) in pages" :key="index">
-              <li class="nav-item" v-if="page.is_active">
-                <a class="nav-link" :aria-label="page.title" :href="page.link">{{ page.week }}</a>
-              </li>
-            </template>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <Main-nav></Main-nav>
     <div class="container">
 
       <h2 class="text-center py-3 mb-0 fw-bold">Week 3</h2>
@@ -89,8 +73,9 @@
   <script type="module">
     // ES module Loading
     import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
-    import { pages } from "./js/nav.js";
     import axios from "https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/esm/axios.min.js";
+
+    import MainNav from './js/MainNav.js';
 
     const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
     const apiPath = 'delifans';
@@ -98,13 +83,15 @@
     createApp({
       data() {
         return {
-          pages,
           loginErrMsg: false,
           user: {
             username: '',
             pawwdoed: ''
           },
         }
+      },
+      components:{
+        MainNav
       },
       methods: {  
         loginToWeek3() {

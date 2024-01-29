@@ -26,19 +26,8 @@
         <div class="container">
           <div class="row">
             <div class="col">
-              <div
-                class="vh-100 d-flex justify-content-center align-items-center"
-              >
-                <div class="list-group index-list">
-                  <template v-for="(page, index) in pages" :key="`${index+1}`">
-                    <a
-                      class="list-group-item list-group-item-action list-group-item-info text-dark fw-bold font-salsa fs-5"
-                      :href="page.link"
-                      v-if="page.is_active"
-                      >{{ page.title }}</a
-                    >
-                  </template>
-                </div>
+              <div class="vh-100 d-flex justify-content-center align-items-center">
+                <index-list></index-list>
               </div>
             </div>
           </div>
@@ -48,14 +37,18 @@
 
     <script type="module">
       import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
-      import { pages } from "./js/nav.js";
+      import { indexList } from "./js/MainNav.js";
 
+      // console.log(indexList);
       createApp({
         data() {
           return {
-            pages,
-          };
+
+          }
         },
+        components:{
+          indexList
+        }
       }).mount("#index");
     </script>
   </body>

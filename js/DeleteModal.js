@@ -39,5 +39,6 @@ export default {
       keyboard: false,
       backdrop: 'static'
     })
+    // this.openModal()
   }
 }

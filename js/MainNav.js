@@ -23,6 +23,12 @@ const pages = [
     link: './week4-login.html',
     is_active: true
   },
+  {
+    title: 'Ex5：進階語法介紹',
+    week: '第五週',
+    link: './week5.html',
+    is_active: true
+  },
 ]
 
 export default {

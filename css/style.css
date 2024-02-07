@@ -5,7 +5,7 @@
 }
 
 img {
-  object-fit: contain;
+  object-fit: cover;
   max-width: 100%;
 }
 
@@ -43,12 +43,27 @@ table td {
 }
 
 .font-salsa {
-  font-family: 'Salsa', cursive;
+  font-family: 'Salsa', cursive !important;
 }
 
 .font-roboto {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", sans-serif !important;
   font-weight: normal;
+}
+
+table,
+table th,
+table td  {
+  font-size: 0.875rem;
+  font-family: 'Salsa', cursive!important;
+}
+
+.card {
+  box-shadow: 3px 0px 18px 0px rgba(0,0,0,0.4);
+}
+
+.card-subtitle {
+  font-family: 'Salsa', cursive!important;
 }
 
 @media (max-width: 767.98px) {

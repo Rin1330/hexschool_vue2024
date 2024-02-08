@@ -21,8 +21,17 @@
 
   <body>
     <div id="app">
-      <User-product-modal :temp-product="tempProduct" ref="productModal"></User-product-modal>
+      
+      <User-product-modal 
+        :temp-product="tempProduct"
+        :add-cart="addCart" 
+        :status="status"
+        ref="productModal">
+      </User-product-modal>
+
       <div class="container">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Show From</button>
+
         <div class="mt-4">
           <table class="table align-middle">
             <thead>
@@ -58,11 +67,10 @@
                 <td>
                   <div class="btn-group btn-group-sm">
                     <button type="button" class="btn btn-outline-secondary" @click="openModal(product)">
-                      <i class="fas fa-spinner fa-pulse"></i>
                       查看更多
                     </button>
-                    <button type="button" class="btn btn-outline-danger">
-                      <i class="fas fa-spinner fa-pulse"></i>
+                    <button type="button" class="btn btn-outline-danger" :disabled="product.id === status.addCartLoading" @click="addCart(product.id)">
+                      <span class="spinner-border spinner-border-sm" aria-hidden="true" v-if="product.id === status.addCartLoading"></span>
                       加到購物車
                     </button>
                   </div>
@@ -72,7 +80,10 @@
           </table>
           <!-- 購物車列表 -->
           <div class="text-end">
-            <button class="btn btn-outline-danger" type="button">
+            <button
+              class="btn btn-outline-danger" 
+              type="button" 
+              @click="removeCart">
               清空購物車
             </button>
           </div>
@@ -81,36 +92,67 @@
               <tr>
                 <th></th>
                 <th>品名</th>
-                <th style="width: 150px">數量/單位</th>
+                <th style="width: 180px">數量</th>
                 <th>單價</th>
               </tr>
             </thead>
             <tbody>
-              <!-- <template v-if="cart.carts"> -->
-                <tr>
+              <!-- <template v-else="cart.carts"> -->
+                <tr v-for="cart in carts.carts">
                   <td>
-                    <button type="button" class="btn btn-outline-danger btn-sm">
-                      <i class="fas fa-spinner fa-pulse"></i>
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-danger btn-sm" 
+                      :disabled="status.cartQtyLoading === cart.id" @click="removeCartItem(cart.id)"
+                      ><span class="spinner-border spinner-border-sm" aria-hidden="true" v-if="cart.id === status.cartRemoveLoading"></span>
                       x
                     </button>
                   </td>
                   <td>
-                    {{ }}
-                    <div class="text-success">已套用優惠券</div>
+                    {{ cart.product.title }}
+                    <!-- <div class="text-success">已套用優惠券</div> -->
                   </td>
                   <td>
                     <div class="input-group input-group-sm">
-                      <div class="input-group mb-3">
-                        <input min="1" type="number" class="form-control" />
-                        <span class="input-group-text" id="basic-addon2"
-                          >{{ }}</span
-                        >
+                      <div class="input-group">
+                        <button 
+                          type="button" 
+                          class="btn btn-primary lh-1" 
+                          @click="cart.qty--; editCartQty(cart, cart.qty)"
+                          :disabled="status.cartQtyLoading === cart.id" 
+                          :disabled="cart.qty === 1" 
+                          v-if="cart.qty > 1"
+                          ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                          <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                        </svg></button>
+
+                        <button 
+                          type="button" 
+                          class="btn btn-danger lh-1" 
+                          @click="removeCartItem(cart.id)"
+                          :disabled="status.cartQtyLoading === cart.id" 
+                          v-else
+                          ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                          </svg></button>
+
+                        <input min="1" type="number" class="form-control text-center" v-model="cart.qty" readonly/>
+
+                        <button 
+                        type="button" 
+                        class="btn btn-primary lh-1" 
+                        @click="cart.qty++; editCartQty(cart, cart.qty)" 
+                        :disabled="status.cartQtyLoading === cart.id"
+                        ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg></button>
                       </div>
                     </div>
                   </td>
                   <td class="text-end">
-                    <small class="text-success">折扣價：</small>
-                    {{ }}
+                    <!-- <small class="text-success">折扣價：</small> -->
+                    {{ cart.total }}
                   </td>
                 </tr>
               <!-- </template> -->
@@ -118,17 +160,17 @@
             <tfoot>
               <tr>
                 <td colspan="3" class="text-end">總計</td>
-                <td class="text-end">{{ }}</td>
+                <td class="text-end">{{ carts.final_total }}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td colspan="3" class="text-end text-success">折扣價</td>
                 <td class="text-end text-success">{{ }}</td>
-              </tr>
+              </tr> -->
             </tfoot>
           </table>
         </div>
         
-        <!-- <div class="my-5 row justify-content-center">
+        <div class="my-5 row justify-content-center">
           <v-form ref="form" class="col-md-6" v-slot="{ errors }">
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
@@ -139,6 +181,8 @@
                 class="form-control"
                 :class="{ 'is-invalid': errors['email'] }"
                 placeholder="請輸入 Email"
+                rules="email|required" 
+                v-model="order.user.email"
               ></v-field>
               <error-message
                 name="email"
@@ -155,7 +199,8 @@
                 class="form-control"
                 :class="{ 'is-invalid': errors['姓名'] }"
                 placeholder="請輸入姓名"
-                rules="required"
+                rules="required" 
+                v-model="order.user.name"
               ></v-field>
               <error-message
                 name="姓名"
@@ -171,7 +216,9 @@
                 type="text"
                 class="form-control"
                 :class="{ 'is-invalid': errors['電話'] }"
-                placeholder="請輸入電話"
+                placeholder="請輸入電話" 
+                rules="min:8|max:12" 
+                v-model="order.user.tel"
               ></v-field>
               <error-message
                 name="電話"
@@ -188,7 +235,8 @@
                 class="form-control"
                 :class="{ 'is-invalid': errors['地址'] }"
                 placeholder="請輸入地址"
-                rules="required"
+                rules="required" 
+                v-model="order.user.address"
               ></v-field>
               <error-message
                 name="地址"
@@ -202,15 +250,28 @@
                 id="message"
                 class="form-control"
                 cols="30"
-                rows="10"
+                rows="8"
+                style="resize: none;"
               ></textarea>
             </div>
             <div class="text-end">
               <button type="submit" class="btn btn-danger">送出訂單</button>
             </div>
           </v-form>
-        </div> -->
+        </div>
       </div>
+
+      <!-- offcanvas -->
+      <div class="offcanvas offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          
+        </div>
+      </div>
+
     </div>
   
 
@@ -229,10 +290,10 @@
       integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
       crossorigin="anonymous"
     ></script>
-    <!-- <script src="https://unpkg.com/vue@next"></script> -->
-    <!-- <script src="https://unpkg.com/vee-validate@next"></script> -->
-    <!-- <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script> -->
-    <!-- <script src="https://unpkg.com/@vee-validate/rules"></script> -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vee-validate/4.12.4/vee-validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vee-validate/rules@4.12.4/dist/vee-validate-rules.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vee-validate/i18n@4.12.4/dist/vee-validate-i18n.min.js"></script>
     <script src="./js/cart.js" type="module"></script>
   </body>
 </html>

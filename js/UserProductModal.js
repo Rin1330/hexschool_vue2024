@@ -1,5 +1,5 @@
 export default {
-  props:['tempProduct'],
+  props:['tempProduct', 'addCart', 'status'],
   template: `<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content border-0">
@@ -25,8 +25,13 @@ export default {
             </div>
             <div>
               <div class="input-group">
-                <input type="number" class="form-control" min="1">
-                <button type="button" class="btn btn-primary" >加入購物車</button>
+                <select name="" id="" class="form-select" v-model="qty">
+                  <option :value="i" v-for="i in 20" :key="i">{{ i }}</option>
+                </select>
+                <button type="button" class="btn btn-primary" @click="addCart(tempProduct.id, qty)" :disabled="tempProduct.id === status.addCartLoading">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true" v-if="tempProduct.id === status.addCartLoading"></span>
+                  加入購物車
+                </button>
               </div>
             </div>
           </div>
@@ -38,12 +43,21 @@ export default {
 </div>`,
   data() {
     return {
-      productModal: null
+      productModal: null,
+      qty: 1,
     }
   },
   methods: {
-    openModal() {
+    open() {
       this.productModal.show()
+    },
+    close() {
+      this.productModal.hide()
+    }
+  },
+  watch: {
+    tempProduct() {
+      this.qty = 1
     }
   },
   mounted() {

@@ -30,7 +30,6 @@
       </User-product-modal>
 
       <div class="container">
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Show From</button>
 
         <div class="mt-4">
           <table class="table align-middle">
@@ -169,9 +168,9 @@
             </tfoot>
           </table>
         </div>
-        
+
         <div class="my-5 row justify-content-center">
-          <v-form ref="form" class="col-md-6" v-slot="{ errors }">
+          <v-form ref="form" class="col-md-6" v-slot="{ errors }" @submit="createOreder">
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <v-field
@@ -252,6 +251,7 @@
                 cols="30"
                 rows="8"
                 style="resize: none;"
+                v-model="order.message"
               ></textarea>
             </div>
             <div class="text-end">
@@ -259,17 +259,7 @@
             </div>
           </v-form>
         </div>
-      </div>
-
-      <!-- offcanvas -->
-      <div class="offcanvas offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          
-        </div>
+        
       </div>
 
     </div>

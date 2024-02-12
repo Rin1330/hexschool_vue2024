@@ -39,7 +39,8 @@ const vm = Vue.createApp({
           address: '',
         },
         message: '',
-      }
+      },
+      offcanvas: null
     }
   },
   components: {
@@ -102,6 +103,19 @@ const vm = Vue.createApp({
       axios.delete(`${this.apiUrl}/api/${this.apiPath}/carts`)
       .then(res => {
         this.getCart();
+        })
+    },
+    openOffcanvas() {
+      this.offcanvas.show()
+    },
+    createOreder() {
+      const url = `${this.apiUrl}/api/${this.apiPath}/order`
+      const order = this.order
+      axios.post( url, { data: order })
+        .then(res => {
+          alert(res.data.message)
+          this.$refs.form.resetForm()
+          this.getCart()
         })
     }
   },

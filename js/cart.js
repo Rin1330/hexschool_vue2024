@@ -1,6 +1,8 @@
 // import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 import axios from "https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/esm/axios.min.js";
 import UserProductModal from './UserProductModal.js';
+// import Loading from 'https://cdn.jsdelivr.net/npm/vue-loading-overlay@6.0.3/dist/css/index.min.css';
+// import 'https://cdn.jsdelivr.net/npm/vue-loading-overlay@6.0.3/dist/css/index.min.css';
 
 const { Form, Field, ErrorMessage, defineRule, configure } = VeeValidate;
 const { loadLocaleFromURL, localize } = VeeValidateI18n;
@@ -24,6 +26,7 @@ const vm = Vue.createApp({
     return {
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       apiPath: 'delifans',
+      isLoading: true,
       status: {
         addCartLoading: '',
         cartQtyLoading: '',
@@ -85,10 +88,17 @@ const vm = Vue.createApp({
             })
     },
     getCart() {
+      const loader = this.$loading.show({
+        color: '#0a0a00',
+        loader: 'dots',
+        backgroundColor: '#ffffff',
+        opacity: 0.9,
+        zIndex: 999,
+      })
       axios.get(`${this.apiUrl}/api/${this.apiPath}/cart`)
         .then(res => {
           this.carts = res.data.data
-          // console.log(this.carts);
+          loader.hide()
         })
     },
     removeCartItem(id) {
@@ -124,5 +134,7 @@ const vm = Vue.createApp({
     this.getCart()
   }
 })
+
+vm.use(VueLoading.LoadingPlugin)
 
 vm.mount('#app')

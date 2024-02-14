@@ -17,11 +17,12 @@
       integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6.0.3/dist/css/index.min.css">
+    
   </head>
 
   <body>
     <div id="app">
-      
       <User-product-modal 
         :temp-product="tempProduct"
         :add-cart="addCart" 
@@ -157,14 +158,22 @@
               <!-- </template> -->
             </tbody>
             <tfoot>
-              <tr>
-                <td colspan="3" class="text-end">總計</td>
-                <td class="text-end">{{ carts.final_total }}</td>
-              </tr>
-              <!-- <tr>
-                <td colspan="3" class="text-end text-success">折扣價</td>
-                <td class="text-end text-success">{{ }}</td>
-              </tr> -->
+                <!-- <tr>
+                  <td colspan="4">
+                    <div class="d-flex justify-content-center">
+                      <img src="https://img-qn.51miz.com/preview/element/00/01/24/94/E-1249429-6EF915DE.jpg!/quality/90/unsharp/true/compress/true/format/jpg/fw/720" class="img-fluid" style="height: 200px;">
+                    </div>
+                    <p class="text-center fw-bold">購物車還沒有東西!!!</p>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td colspan="3" class="text-end">總計</td>
+                  <td class="text-end">{{ carts.final_total }}</td>
+                </tr>
+                <!-- <tr>
+                  <td colspan="3" class="text-end text-success">折扣價</td>
+                  <td class="text-end text-success">{{ }}</td>
+                </tr> -->
             </tfoot>
           </table>
         </div>
@@ -284,6 +293,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vee-validate/4.12.4/vee-validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@vee-validate/rules@4.12.4/dist/vee-validate-rules.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@vee-validate/i18n@4.12.4/dist/vee-validate-i18n.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
     <script src="./js/cart.js" type="module"></script>
   </body>
 </html>

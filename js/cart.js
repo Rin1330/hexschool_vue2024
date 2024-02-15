@@ -27,6 +27,7 @@ const vm = Vue.createApp({
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       apiPath: 'delifans',
       isLoading: true,
+      isCartEmpty: true,
       status: {
         addCartLoading: '',
         cartQtyLoading: '',
@@ -54,8 +55,16 @@ const vm = Vue.createApp({
   },
   methods: {
     getProducts() {
+      const loader = this.$loading.show({
+        color: '#0a0a00',
+        loader: 'dots',
+        backgroundColor: '#ffffff',
+        opacity: 1,
+        zIndex: 999,
+      })
       axios.get(`${this.apiUrl}/api/${this.apiPath}/products/all`)
         .then(res => this.products = res.data.products )
+        loader.hide()
     },
     openModal(product) {
       this.tempProduct = product
@@ -73,6 +82,7 @@ const vm = Vue.createApp({
           this.status.addCartLoading = '';
           this.getCart()
           this.$refs.productModal.close()
+          this.status.isCartEmpty = false
         })
     },
     editCartQty(item, qty=1) {
@@ -97,9 +107,11 @@ const vm = Vue.createApp({
       })
       axios.get(`${this.apiUrl}/api/${this.apiPath}/cart`)
         .then(res => {
+          // console.log(res.data.data.total);
           this.carts = res.data.data
           loader.hide()
         })
+      
     },
     removeCartItem(id) {
       this.status.cartQtyLoading = id;
@@ -129,6 +141,11 @@ const vm = Vue.createApp({
         })
     }
   },
+  // watch: {
+  //   carts() {
+  //     console.log(this.carts.length);
+  //   }
+  // },
   mounted() {
     this.getProducts()
     this.getCart()

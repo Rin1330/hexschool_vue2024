@@ -158,18 +158,22 @@
               <!-- </template> -->
             </tbody>
             <tfoot>
-                <!-- <tr>
+              <template v-if="carts.total == 0 || carts.total <= 0">
+                <tr>
                   <td colspan="4">
                     <div class="d-flex justify-content-center">
                       <img src="https://img-qn.51miz.com/preview/element/00/01/24/94/E-1249429-6EF915DE.jpg!/quality/90/unsharp/true/compress/true/format/jpg/fw/720" class="img-fluid" style="height: 200px;">
                     </div>
                     <p class="text-center fw-bold">購物車還沒有東西!!!</p>
                   </td>
-                </tr> -->
+                </tr>
+              </template>
+              <template v-else>
                 <tr>
                   <td colspan="3" class="text-end">總計</td>
                   <td class="text-end">{{ carts.final_total }}</td>
                 </tr>
+              </template>
                 <!-- <tr>
                   <td colspan="3" class="text-end text-success">折扣價</td>
                   <td class="text-end text-success">{{ }}</td>
